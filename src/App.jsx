@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { NewTodoForm } from "./NewTodoForm"
 import { TodoList } from "./TodoList"
 
@@ -8,7 +8,25 @@ export default function App() {
 
   // Added newItem and func setNewItem for state
   // create a new value to 'newItem' and rerun the app 
-  const [todos, setTodos] = useState([])
+  // const [todos, setTodos] = useState([])
+
+  /*
+  With state, when we useState, we check if item is in localStorage, if not return an empty array, else return the array
+  */
+  const [todos, setTodos] = useState(() =>{
+    const localValue = localStorage.getItem("ITEMS")
+    if(localValue == null) return []
+
+    return JSON.parse(localValue)
+  })
+
+  /*
+  on useEffect, everytime we modify the [todos] array, we set the localStorage to store them as 'ITEMS'
+  */
+
+  useEffect(()=>{
+    localStorage.setItem("ITEMS", JSON.stringify(todos))
+  }, [todos])
 
   function addTodo(title){
     setTodos((currentTodos) => {
